@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Bildauswahl mit Dropdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    .dropdown {
+      position: relative;
+      width: 220px;
+    }
+
+    .dropdown-selected {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-selected img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border: 1px solid #ccc;
+      background-color: white;
+      z-index: 100;
+      display: none;
+      max-height: 250px;
+      overflow-y: auto;
+      border-radius: 8px;
+    }
+
+    .dropdown-item {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dropdown-item img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    #selected-image-display {
+      margin-top: 20px;
+      max-width: 300px;
+      height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Eigene Bilder im Dropdown-Menü</h2>
+
+<div class="dropdown" id="imageDropdown">
+  <div class="dropdown-selected" id="selectedItem">
+    <span>Bild auswählen...</span>
+  </div>
+ <div class="dropdown-list" id="dropdownList">
+  <!-- Korrigierte Pfade mit / statt \ -->
+  <div class="dropdown-item" data-id="1" data-img="img/GAEB-90_Satzart.jpg">
+  <img src="img/GAEB-90_Satzart.jpg" alt="Bild 1">
+  <span>Bild 1</span>
+</div>
+  <div class="dropdown-item" data-id="2"data-img="img/GAEB90_Aufbau.jpg">
+    <img src="img/GAEB90_Aufbau.jpg" alt="Bild 2">
+    <span>Bild 2</span>
+  </div>
+  <div class="dropdown-item" data-id="3" data-img="bilder/bild3.bmp">
+    <img src="bilder/bild3.bmp" alt="Bild 3">
+    <span>Bild 3</span>
+  </div>
+</div>
+</div>
+
+<img id="selected-image-display" src="TEST_POPUP\img\GAEB-90_Satzart.jpg" alt="Ausgewähltes Bild" style="display: none;" />
+
+<script>
+  const dropdown = document.getElementById('imageDropdown');
+  const selectedItem = document.getElementById('selectedItem');
+  const dropdownList = document.getElementById('dropdownList');
+  const selectedImageDisplay = document.getElementById('selected-image-display');
+
+  // Dropdown anzeigen/ausblenden
+  selectedItem.addEventListener('click', () => {
+    dropdownList.style.display = dropdownList.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Auswahl eines Bildes
+  let selectedImageId = null; // Hier wird die Nummer gespeichert
+  const items = dropdownList.querySelectorAll('.dropdown-item');
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      const imgSrc = item.getAttribute('data-img');
+      const label = item.querySelector('span').textContent;
+      const imgId = item.getAttribute('data-id'); // <-- Bildnummer auslesen
+
+      selectedImageId = parseInt(imgId); // in Zahl umwandeln und speichern
+
+      selectedItem.innerHTML = `<img src="${imgSrc}" alt="${label}"><span>${label}</span>`;
+      selectedImageDisplay.src = imgSrc;
+      selectedImageDisplay.style.display = 'block';
+      dropdownList.style.display = 'none';
+      console.log("Ausgewähltes Bild-ID:", selectedImageId); // Debug
+    });
+  });
+
+  // Klick außerhalb schließt das Menü
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+      dropdownList.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
